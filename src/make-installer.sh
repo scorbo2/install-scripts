@@ -16,12 +16,14 @@
 #
 # scorbett 2022-05-05
 
-# Make sure we were invoked from the right place:
-if [ ! -f install.sh -o ! -d bin ]; then
-  echo "You have to invoke this from the install_script directory."
+# Make sure we have installer props set up:
+# The project root directory should contain installer.props)
+if [ ! -f installer.props ]; then
+  echo "make-installer: no installer.props found in this directory."
   exit 1
 fi
 
+# TODO everything below here is still wrong
 if [ $# -ne 3 ]; then
   echo "USAGE: copy_installer.sh <destination_dir> <app_name> <app_version>"
   exit 1
