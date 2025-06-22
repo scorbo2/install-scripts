@@ -22,8 +22,16 @@ if [ ! -f installer.props ]; then
   echo "make-installer: no installer.props found in this directory."
   exit 1
 fi
+source ./installer.props
 
-# TODO everything below here is still wrong
+
+
+# TODO everything below here is still old and wrong
+exit 1
+###################################
+
+
+
 if [ $# -ne 3 ]; then
   echo "USAGE: copy_installer.sh <destination_dir> <app_name> <app_version>"
   exit 1
@@ -44,7 +52,7 @@ mkdir -p ${DEST_DIR}/bin
 
 # Copy files with variable substitution:
 cat templates/template-install.sh | sed s/ApplicationGoesHere/${APPLICATION}/g | sed s/VersionGoesHere/${VERSION}/g > ${DEST_DIR}/install.sh
-cat templates/templaete=launcher.sh | sed s/ApplicationGoesHere/${APPLICATION}/g > ${DEST_DIR}/bin/${APPLICATION}
+cat templates/templaete=launcher.sh | sed s/ApplicationGoesHere/${APPLICATION}/g | sed s/JavaMemGoesHere/${JAVA_MEM}/g > > ${DEST_DIR}/bin/${APPLICATION}
 cat templates/template-uninstall.sh | sed s/ApplicationGoesHere/${APPLICATION}/g > ${DEST_DIR}/bin/uninstall.sh
 
 echo "Updated ${APPLICATION} in ${DEST_DIR} with latest install/uninstall/launcher scripts."
