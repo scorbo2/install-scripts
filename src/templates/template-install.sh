@@ -24,9 +24,6 @@
 # If you don't start this script as root, and you're trying
 # to install to a non-regular-writable directory like /opt,
 # then the script will prompt for a sudo password automatically.
-#
-# 2017-11-27 scorbett (copied from LogoGenerator and generified)
-# 2022-05-05 scorbett Added silent mode for batch installs.
 
 VERSION=VersionGoesHere
 APPLICATION=ApplicationGoesHere
@@ -39,11 +36,17 @@ if [ "$1" == "--silent" ]; then
   shift
 fi
 
-# safety check, make sure we're running from dist/
-if [ ! -f ./${APPLICATION}.jar -o ! -d ./lib ]; then
-  echo "${APPLICATION} not found in current directory; aborting."
+# Find out where we were launched from and make sure
+# that our application jar file lives there.
+# This is the minimum we can check here.
+SRCDIR=`realpath $0`
+SRCDIR=`dirname ${SRCDIR}`
+if [ ! -f ${SRCDIR}/${APPLICATION}.jar ]; then
+  echo "${APPLICATION} not found in installer directory; aborting."
   exit 1
 fi
+PREVDIR=`pwd`
+cd ${SRCDIR}
 
 # Prompt for installation dir if not provided.
 if [ "$1" == "" ]; then
@@ -70,7 +73,8 @@ if [ ! -w $PARENT_DIR ]; then
       SILENT_OPT="--silent"
     fi
     # note this will prompt the user even if silent mode is activated...
-    # not much we can do about that though
+    # That seems contrary to the nature of silent mode.
+    # not much we can do about that though, as we need the root password here.
     sudo $0 ${SILENT_OPT} ${INSTALL_DIR}
     exit $?
   fi
@@ -83,6 +87,8 @@ if [ -d $INSTALL_DIR ]; then
     read input;
     if [ "${input,,}" == "y" -o "${input,,}" == "yes" ]; then
       echo "Existing installation will be overwritten."
+      # Need to make sure any old dependency jars or whatever are gone:
+      rm -rf ${INSTALL_DIR}/*
     else
       echo "Aborting."
       exit 1
@@ -92,16 +98,16 @@ fi
 
 
 # install:
-mkdir -p $INSTALL_DIR/lib
-mkdir -p $INSTALL_DIR/bin
-cp ${APPLICATION}.jar $INSTALL_DIR
-cp -r lib/* $INSTALL_DIR/lib
-cp -r bin/* $INSTALL_DIR/bin
-cp logging.properties $INSTALL_DIR
-cp logo.png $INSTALL_DIR
-cp ReleaseNotes.txt $INSTALL_DIR
-rm -f $INSTALL_DIR/.version
-echo $VERSION >> $INSTALL_DIR/.version
+for file in `/bin/ls` ; do
+  if [ -d $file ]; then
+    cp -r $file $INSTALL_DIR
+  else
+    cp $file $INSTALL_DIR
+  fi
+done
+
+# Make note of the version that we just installed:
+echo $VERSION > $INSTALL_DIR/.version
 
 # Create a /usr/bin symlink if needed:
 if [ $SILENT -eq 1 ]; then
