@@ -6,7 +6,7 @@ APPLICATION=ApplicationGoesHere
 # Figure out where the application configuration
 # and extensions should be stored. You can alter
 # these paths if you wish to store them elsewhere.
-USER_HOME=`readpath ~`
+USER_HOME=`realpath ~`
 APPLICATION_HOME="${USER_HOME}/.${APPLICATION}"
 EXTENSIONS_DIR="${APPLICATION_HOME}/extensions"
 JAVA_MEM="JavaMemGoesHere"
