@@ -66,9 +66,9 @@ mkdir -p ${WORKINGDIR}/bin
 cat ${TEMPLATE_DIR}/template-install.sh | sed s/ApplicationGoesHere/${APPLICATION}/g | sed s/VersionGoesHere/${VERSION}/g > ${WORKINGDIR}/install.sh
 cat ${TEMPLATE_DIR}/template-launcher.sh | sed s/ApplicationGoesHere/${APPLICATION}/g | sed s/JavaMemGoesHere/${JAVA_MEM}/g > ${WORKINGDIR}/bin/${APPLICATION}
 cat ${TEMPLATE_DIR}/template-uninstall.sh | sed s/ApplicationGoesHere/${APPLICATION}/g > ${WORKINGDIR}/bin/uninstall.sh
-chmod 744 ${WORKINGDIR}/install.sh
-chmod 744 ${WORKINGDIR}/bin/${APPLICATION}
-chmod 744 ${WORKINGDIR}/bin/uninstall.sh
+chmod 755 ${WORKINGDIR}/install.sh
+chmod 755 ${WORKINGDIR}/bin/${APPLICATION}
+chmod 755 ${WORKINGDIR}/bin/uninstall.sh
 
 # Optionally throw in an INSTALL.txt with project information:
 if [ ${PROJECT_URL} != "" -a ! -f ${WORKINGDIR}/INSTALL.txt ]; then
