@@ -1,20 +1,57 @@
 #/bin/bash
 
-# TODO TODO TODO
-# This code is old and will not work with the new structure.
-# Basically needs a rewrite.
-# I'm just copying it here for use as a reference / starting point.
-# TODO TODO TODO
-
-
-# This script will set up an application with an
-# installation script, launcher script, and uninstall
-# script. This saves manual copying and faffing about
-# with editing properties once the files are in place.
-# Can be run again for the same app to update the
-# launcher/installer/uninstaller if needed.
+# Generates a linux installer package for a Java application.
+# Options for this script are taken from a file named
+# "installer.props" in the current directory. If not
+# found, the script will take no action.
 #
-# scorbett 2022-05-05
+# ASSUMPTIONS:
+#  1) installer.props exists in the current directory
+#  2) your application has a single executable jar file
+#  3) You are okay with that jar file being named after the app
+#
+# Possible options in installer.props:
+#  FORMAT -> currently we only support "tarball" as an option here.
+#            That will generate a .tar.gz containing everything
+#            needed for an install. Future options may
+#            include "RPM" and "DEB".
+#  APPLICATION -> The name of your application. This will
+#            also be used as the name of your launcher script.
+#            It is advisable not to use spaces or other characters
+#            that shouldn't be in a filename.
+#  VERSION -> The major.minor version of your app.
+#            By convention we don't use major.minor.patch here.
+#  PROJECT_URL -> an optional URL for your project home.
+#  JAVAMEM -> Any extra java memory options you want the launcher
+#            to use when starting your application.
+#            Example: "-Xms1g -Xmx2g"
+#            An empty string is also fine here.
+#  JAR -> The location of your executable jar.
+#         This path should be relative to the current dir.
+#  TO_COPY -> An optional space-separated list of extra files
+#         or directories to include in the install. Each path
+#         listed here should be relative to the current dir.
+#         It is advisable to include a logo.png if you want
+#         a desktop shortcut to be generated for your app.
+#
+# Note: an INSTALL.txt informational file will be included in
+# the generated tarball if you specify a PROJECT_URL. This file
+# will however not be installed when the installer is run. It's
+# just to provide casual passers-by with some info about what
+# the tarball is for.
+#
+# SAMPLE USAGE
+#  Literally just cd into your project root directory and run:
+#    make-installer
+#  The tarball will be output to the current directory.
+#  You should commit installer.props to your git repo.
+#
+#
+# Yes, I know you can do all this with maven plugins.
+# This script is very old and I maintain it just for 
+# backwards compatibility and also out of habit at this point :)
+#
+
 
 # Find where we were launched from and make sure
 # that our template files exist there:
