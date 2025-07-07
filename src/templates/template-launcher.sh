@@ -7,8 +7,11 @@ APPLICATION=ApplicationGoesHere
 # and extensions should be stored. You can alter
 # these paths if you wish to store them elsewhere.
 USER_HOME=`realpath ~`
-APPLICATION_HOME="${USER_HOME}/.${APPLICATION}"
-EXTENSIONS_DIR="${APPLICATION_HOME}/extensions"
+SETTINGS_DIR="${USER_HOME}/.${APPLICATION}"
+EXTENSIONS_DIR="${SETTINGS_DIR}/extensions"
+
+# You can optionally provide startup memory options
+# if your application has specific requirements:
 JAVA_MEM="JavaMemGoesHere"
 
 # We need to find the directory where ApplicationGoesHere is installed,
@@ -41,8 +44,9 @@ if [ "${JAVA}" == "" ]; then
   fi
 fi
 
-# Invoke ApplicationGoesHere with home and extensions dirs:
+# Invoke ApplicationGoesHere with install dir, settings dir, and extensions dir:
 $JAVA ${JAVA_MEM} \
-  -DAPPLICATION_HOME=${APPLICATION_HOME} \
+  -DINSTALL_DIR=${INSTALL_DIR} \
+  -DSETTINGS_DIR=${SETTINGS_DIR} \
   -DEXTENSIONS_DIR=${EXTENSIONS_DIR} \
   -jar ${INSTALL_DIR}/${APPLICATION}.jar $*
