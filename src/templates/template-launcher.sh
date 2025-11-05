@@ -3,6 +3,9 @@
 # Invokes ApplicationGoesHere with default options.
 APPLICATION=ApplicationGoesHere
 
+# Don't change this value without also changing UpdateManager!
+APPLICATION_RESTART=100
+
 # Figure out where the application configuration
 # and extensions should be stored. You can alter
 # these paths if you wish to store them elsewhere.
@@ -44,9 +47,19 @@ if [ "${JAVA}" == "" ]; then
   fi
 fi
 
-# Invoke ApplicationGoesHere with install dir, settings dir, and extensions dir:
-$JAVA ${JAVA_MEM} \
-  -DINSTALL_DIR=${INSTALL_DIR} \
-  -DSETTINGS_DIR=${SETTINGS_DIR} \
-  -DEXTENSIONS_DIR=${EXTENSIONS_DIR} \
-  -jar ${INSTALL_DIR}/${APPLICATION}.jar $*
+while true; do
+    # Invoke ApplicationGoesHere with install dir, settings dir, and extensions dir:
+    $JAVA ${JAVA_MEM} \
+      -DINSTALL_DIR=${INSTALL_DIR} \
+      -DSETTINGS_DIR=${SETTINGS_DIR} \
+      -DEXTENSIONS_DIR=${EXTENSIONS_DIR} \
+      -jar ${INSTALL_DIR}/${APPLICATION}.jar $*
+    exit_code=$?
+
+    if [ $exit_code -eq $APPLICATION_RESTART ]; then
+        echo "Application restart requested. Restarting in 2 seconds..."
+        sleep 2
+    else
+        exit $exit_code
+    fi
+done
