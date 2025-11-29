@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 # Generates a linux installer package for a Java application.
 # Options for this script are taken from a file named
@@ -33,6 +33,9 @@
 #         listed here should be relative to the current dir.
 #         It is advisable to include a logo.png if you want
 #         a desktop shortcut to be generated for your app.
+#         You can name a directory here to recursively copy it.
+#  OUTPUT_DIR -> An optional path for the output.
+#         Defaults to current directory if not specified.
 #
 # Note: an INSTALL.txt informational file will be included in
 # the generated tarball if you specify a PROJECT_URL. This file
@@ -55,6 +58,7 @@
 
 # Find where we were launched from and make sure
 # that our template files exist there:
+SCRIPTNAME=`basename $0`
 BASEDIR=`realpath $0`
 BASEDIR=`dirname $BASEDIR`
 TEMPLATE_DIR="${BASEDIR}/templates"
@@ -66,24 +70,40 @@ fi
 # Make sure we have installer props set up:
 # The project root directory should contain installer.props)
 if [ ! -f installer.props ]; then
-  echo "make-installer: no installer.props found in this directory."
+  echo "${SCRIPTNAME}: no installer.props found in this directory."
   exit 1
 fi
 source ./installer.props
 
 # Check to make sure we got what we need:
 if [ "$JAR" == "" ]; then
-  echo "No jar file specified. Check installer.props"
+  echo "${SCRIPTNAME}: No jar file specified. Check installer.props"
   exit 1
 fi
 if [ "$FORMAT" != "tarball" ]; then
-  echo "Currently, only tarball format is supported."
+  echo "${SCRIPTNAME}: Currently, only tarball format is supported."
   exit 1
 fi
 if [ "$APPLICATION" == "" -o "$VERSION" == "" ]; then
-  echo "Both APPLICATION and VERSION must be specified in installer.props"
+  echo "${SCRIPTNAME}: Both APPLICATION and VERSION must be specified in installer.props"
   exit 1
 fi
+if [ "$OUTPUT_DIR" == "" ]; then
+  OUTPUT_DIR="./"
+fi
+mkdir -p ${OUTPUT_DIR}
+
+# Sanity check our expected files:
+if [ ! -f "$JAR" ]; then
+  echo "${SCRIPTNAME}: The jar file ${JAR} can't be found. Have you built the project?"
+  exit 1
+fi
+for file in ${TO_COPY} ; do
+  if [ ! -e "${file}" ]; then
+    echo "${SCRIPTNAME}: can't find file: ${file}"
+    exit 1
+  fi
+done
 
 # Now we can begin assembling the installer package:
 TMPDIR=`mktemp -d`
@@ -107,7 +127,7 @@ chmod 755 ${WORKINGDIR}/install.sh
 chmod 755 ${WORKINGDIR}/bin/${APPLICATION}
 chmod 755 ${WORKINGDIR}/bin/uninstall.sh
 
-# Optionally throw in an INSTALL.txt with project information:
+# Optionally throw in an INSTALL.txt with project information if there isn't one already:
 if [ ${PROJECT_URL} != "" -a ! -f ${WORKINGDIR}/INSTALL.txt ]; then
   echo "This is the installer tarball for ${APPLICATION}-${VERSION}" > ${WORKINGDIR}/INSTALL.txt
   echo "Project URL: ${PROJECT_URL}" >> ${WORKINGDIR}/INSTALL.txt
@@ -121,9 +141,9 @@ fi
 PREVWD=`pwd`
 cd $TMPDIR
 tar czf ${APPLICATION}-${VERSION}.tar.gz ${APPLICATION}-${VERSION}
-mv *.tar.gz $PREVWD
 cd $PREVWD
+mv ${TMPDIR}/${APPLICATION}-${VERSION}.tar.gz ${OUTPUT_DIR}
 rm -rf ${TMPDIR}
 
-echo "Generated installer tarball: ${APPLICATION}-${VERSION}.tar.gz"
+echo "Generated installer tarball: ${OUTPUT_DIR}/${APPLICATION}-${VERSION}.tar.gz"
 
