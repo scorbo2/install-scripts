@@ -30,6 +30,28 @@ APPLICATION=ApplicationGoesHere
 INSTALL_DIR=/opt/${APPLICATION}
 SILENT=0
 
+# Parameters: install dir, application name, user home dir
+function createDesktopShortcut {
+  SHORTCUT_FILE=`mktemp`
+  echo "[Desktop Entry]" > $SHORTCUT_FILE
+  echo "Version=1.0" >> $SHORTCUT_FILE
+  echo "Type=Application" >> $SHORTCUT_FILE
+  echo "Name=${2}" >> $SHORTCUT_FILE
+  echo "Comment=" >> $SHORTCUT_FILE
+  echo "Exec=${1}/bin/${2}" >> $SHORTCUT_FILE
+  echo "Icon=${1}/logo.png" >> $SHORTCUT_FILE
+  echo "Path=${3}" >> $SHORTCUT_FILE
+  echo "Terminal=false" >> $SHORTCUT_FILE
+  echo "StartupNotify=false" >> $SHORTCUT_FILE
+
+  # If we were invoked via sudo, make sure ownership is correct:
+  if [ -n "$SUDO_UID" ]; then
+    chown ${SUDO_UID}:${SUDO_GID} $SHORTCUT_FILE
+  fi
+  chmod 775 $SHORTCUT_FILE
+  mv $SHORTCUT_FILE ${3}/Desktop/${2}.desktop
+}
+
 # Silent running if requested:
 if [ "$1" == "--silent" ]; then
   SILENT=1
@@ -116,7 +138,7 @@ echo $VERSION > $INSTALL_DIR/.version
 if [ $SILENT -eq 1 ]; then
   input="y"
 else
-  echo "Installation complete. Create a symlink in /usr/bin for easy access?"
+  echo "Create a symlink in /usr/bin for easy access?"
   read input
 fi
 if [ "${input,,}" == "y" -o "${input,,}" == "yes" ]; then
@@ -125,6 +147,24 @@ if [ "${input,,}" == "y" -o "${input,,}" == "yes" ]; then
   else
     ln -sf ${INSTALL_DIR}/bin/${APPLICATION} /usr/bin
   fi
+fi
+
+# Create a desktop shortcut if a logo.png was provided:
+if [ -f ${INSTALL_DIR}/logo.png ]; then
+  HOMEDIR=$HOME
+  if [ -n "$SUDO_USER" ]; then
+    # We were invoked via sudo, so find the originating user:
+    HOMEDIR=$(eval echo ~$SUDO_USER)
+  fi
+  if [ $SILENT -eq 1 ]; then
+    input="y"
+  else
+    echo "Create a desktop shortcut in ${HOMEDIR}/Desktop?"
+    read input
+  fi
+    if [ "${input,,}" == "y" -o "${input,,}" == "yes" ]; then
+      createDesktopShortcut $INSTALL_DIR $APPLICATION $HOMEDIR
+    fi
 fi
 
 echo "Successfully installed ${APPLICATION} ${VERSION} to ${INSTALL_DIR}"
