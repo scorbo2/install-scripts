@@ -25,7 +25,7 @@
 ME=`basename $0`
 
 # TODO don't hardcode this
-RELEASE_DIR=/home/scorbett/Releases
+RELEASE_DIR=/home/scorbett/Software/sc-releases/archived
 
 PREVIEW_FILE=`mktemp`
 INSTALL_FILE=`mktemp`
@@ -73,14 +73,14 @@ fi
 
 # Get a unique listing of available application installer packages:
 # TODO wow, hard coding everywhere. This whole script feels like a hack.
-NAMES=`/bin/ls ${RELEASE_DIR}/*.tar.gz | cut -d \- -f 1 | sed "s/\/home\/scorbett\/Releases\///g" | uniq | sort`
+NAMES=`/bin/ls ${RELEASE_DIR}/*.tar.gz | cut -d \- -f 2 | sed "s/releases\/archived\///g" | uniq | sort`
 if [ "${NAMES}" = "" ]; then
   die "Your Releases directory does not contain any recognized installer packages."
 fi
 
 # Figure out what we need to do, and generate a preview of it for the user:
 for NAME in $NAMES; do
-  HIGHEST_VERSION=`/bin/ls -v ${RELEASE_DIR}/${NAME}* | tail -1 | cut -d \- -f 2 | sed s/\.tar\.gz//g`
+  HIGHEST_VERSION=`/bin/ls -v ${RELEASE_DIR}/${NAME}* | tail -1 | cut -d \- -f 3 | sed s/\.tar\.gz//g`
 
   if [ ! -d /opt/${NAME} ]; then
     echo "  ${NAME} ${HIGHEST_VERSION} will be installed." >> ${INSTALL_FILE}
