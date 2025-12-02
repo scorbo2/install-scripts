@@ -124,10 +124,10 @@ for file in `/bin/ls` ; do
   if [ "${file}" == "INSTALL.txt" ]; then
     continue;
   fi
-  if [ -d $file ]; then
-    cp -r $file $INSTALL_DIR
+  if [ -d "$file" ]; then
+    cp -r "$file" "$INSTALL_DIR/"
   else
-    cp $file $INSTALL_DIR
+    cp "$file" "$INSTALL_DIR"
   fi
 done
 
