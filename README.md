@@ -77,6 +77,9 @@ is probably to use a conditional profile and invoke the script from a known loca
             <file>
                 <exists>${user.home}/bin/make_installer</exists>
             </file>
+            <os>
+                <name>Linux</name>
+            </os>
         </activation>
         <build>
             <plugins>
@@ -104,12 +107,13 @@ is probably to use a conditional profile and invoke the script from a known loca
 ```
 
 This maven profile will be activated automatically if the `make_installer` script exists in the known
-location. Otherwise, the profile will not activate and the existing build workflow is unaffected.
+location AND if the maven build is happening on a Linux system. 
+Otherwise, the profile will not activate and the existing build workflow is unaffected.
 The end result is you should be able to do `mvn package` and the tarball will just be generated automatically.
 
 ## Future development
 
-Probably none - this is old legacy stuff. This will likely be replaced by jpackage.
+Probably none - this is old legacy stuff. This will likely be replaced by jpackage at some point.
 
 ## License
 
