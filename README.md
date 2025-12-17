@@ -30,6 +30,7 @@ VERSION="1.0-SNAPSHOT"
 
 # Optionally specify categories for your application:
 # (this is used for creating a system menu entry)
+# If blank or missing, the category "Other" will be used.
 CATEGORY="AudioVideo"
 
 # Your GitHub project page or whatever:
@@ -118,7 +119,8 @@ The end result is you should be able to do `mvn package` and the tarball will ju
 ## A note on Application Categories
 
 The `CATEGORY` property in installer.props is used to specify the type of application
-being installed. This is used to create a proper desktop menu entry for the application.
+being installed. If blank or missing, the default value of "Other" will be assigned by
+the system. You can change that by specifying a value for this property.
 Possible values include:
 
 - Development - Programming tools, IDEs, editors
