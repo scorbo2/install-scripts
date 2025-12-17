@@ -27,6 +27,7 @@
 
 VERSION=VersionGoesHere
 APPLICATION=ApplicationGoesHere
+CATEGORY=CategoryGoesHere
 INSTALL_DIR=/opt/${APPLICATION}
 SILENT=0
 
@@ -36,9 +37,10 @@ function createDesktopShortcut {
   echo "[Desktop Entry]" > $SHORTCUT_FILE
   echo "Version=1.0" >> $SHORTCUT_FILE
   echo "Type=Application" >> $SHORTCUT_FILE
+  echo "Categories=${CATEGORY}" >> $SHORTCUT_FILE
   echo "Name=${2}" >> $SHORTCUT_FILE
   echo "Comment=" >> $SHORTCUT_FILE
-  echo "Exec=${1}/bin/${2}" >> $SHORTCUT_FILE
+  echo "Exec=${1}/bin/${2} %F" >> $SHORTCUT_FILE
   echo "Icon=${1}/logo.png" >> $SHORTCUT_FILE
   echo "Path=${3}" >> $SHORTCUT_FILE
   echo "Terminal=false" >> $SHORTCUT_FILE
@@ -159,11 +161,18 @@ if [ -f ${INSTALL_DIR}/logo.png ]; then
   if [ $SILENT -eq 1 ]; then
     input="y"
   else
-    echo "Create a desktop shortcut in ${HOMEDIR}/Desktop?"
+    echo "Create a desktop shortcut in ${HOMEDIR}/Desktop and a menu item?"
     read input
   fi
     if [ "${input,,}" == "y" -o "${input,,}" == "yes" ]; then
       createDesktopShortcut $INSTALL_DIR $APPLICATION $HOMEDIR
+
+      # Also create a system menu item for the local user if possible.
+      # (This depends on what version of linux we're running)
+      if [ -d ${HOMEDIR}/.local/share/applications ]; then
+        cp ${HOMEDIR}/Desktop/${APPLICATION}.desktop ${HOMEDIR}/.local/share/applications/
+        update-desktop-database ${HOMEDIR}/.local/share/applications/ 2> /dev/null
+      fi
     fi
 fi
 

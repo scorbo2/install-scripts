@@ -28,6 +28,10 @@ FORMAT="tarball"
 APPLICATION="MyApplication"
 VERSION="1.0-SNAPSHOT"
 
+# Optionally specify categories for your application:
+# (this is used for creating a system menu entry)
+CATEGORY="AudioVideo"
+
 # Your GitHub project page or whatever:
 PROJECT_URL="https://project.example/MyApplication"
 
@@ -110,6 +114,30 @@ This maven profile will be activated automatically if the `make_installer` scrip
 location AND if the maven build is happening on a Linux system. 
 Otherwise, the profile will not activate and the existing build workflow is unaffected.
 The end result is you should be able to do `mvn package` and the tarball will just be generated automatically.
+
+## A note on Application Categories
+
+The `CATEGORY` property in installer.props is used to specify the type of application
+being installed. This is used to create a proper desktop menu entry for the application.
+Possible values include:
+
+- Development - Programming tools, IDEs, editors
+- TextEditor - Text editors specifically
+- Office - Office applications, document editors
+- Graphics - Image viewers, editors
+- AudioVideo - Media players, editors
+- Game - Games
+- Network - Web browsers, email clients
+- Utility - System utilities, tools
+- Settings - Configuration tools
+- System - System administration tools
+
+Additional Categories (for further refinement):
+
+- Java - Java applications
+- FileManager - File management tools
+- Viewer - File viewers
+- Editor - Generic editors
 
 ## Future development
 

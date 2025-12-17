@@ -19,6 +19,11 @@
 #            also be used as the name of your launcher script.
 #            It is advisable not to use spaces or other characters
 #            that shouldn't be in a filename.
+#  CATEGORY -> An optional category for your application.
+#            This is used when generating desktop shortcuts.
+#            You can specify more than one by separating them
+#            with semicolons. Example:
+#              CATEGORY="AudioVideo;Player;Recorder;"
 #  VERSION -> The major.minor version of your app.
 #            By convention we don't use major.minor.patch here.
 #  PROJECT_URL -> an optional URL for your project home.
@@ -120,7 +125,7 @@ done
 mkdir -p ${WORKINGDIR}/bin
 
 # Generate our launcher script and install/uninstall scripts:
-cat ${TEMPLATE_DIR}/template-install.sh | sed s/ApplicationGoesHere/${APPLICATION}/g | sed s/VersionGoesHere/${VERSION}/g > ${WORKINGDIR}/install.sh
+cat ${TEMPLATE_DIR}/template-install.sh | sed s/ApplicationGoesHere/${APPLICATION}/g | sed s/VersionGoesHere/${VERSION}/g | sed s/CategoryGoesHere/${CATEGORY}/g > ${WORKINGDIR}/install.sh
 cat ${TEMPLATE_DIR}/template-launcher.sh | sed s/ApplicationGoesHere/${APPLICATION}/g | sed s/JavaMemGoesHere/${JAVA_MEM}/g > ${WORKINGDIR}/bin/${APPLICATION}
 cat ${TEMPLATE_DIR}/template-uninstall.sh | sed s/ApplicationGoesHere/${APPLICATION}/g > ${WORKINGDIR}/bin/uninstall.sh
 chmod 755 ${WORKINGDIR}/install.sh
