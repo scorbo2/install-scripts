@@ -40,7 +40,7 @@ function createDesktopShortcut {
   echo "Categories=${CATEGORY}" >> $SHORTCUT_FILE
   echo "Name=${2}" >> $SHORTCUT_FILE
   echo "Comment=" >> $SHORTCUT_FILE
-  echo "Exec=${1}/bin/${2} %F" >> $SHORTCUT_FILE
+  echo "Exec=${1}/bin/${2} \"%F\"" >> $SHORTCUT_FILE
   echo "Icon=${1}/logo.png" >> $SHORTCUT_FILE
   echo "Path=${3}" >> $SHORTCUT_FILE
   echo "Terminal=false" >> $SHORTCUT_FILE
