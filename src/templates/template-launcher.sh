@@ -53,7 +53,7 @@ while true; do
       -DINSTALL_DIR=${INSTALL_DIR} \
       -DSETTINGS_DIR=${SETTINGS_DIR} \
       -DEXTENSIONS_DIR=${EXTENSIONS_DIR} \
-      -jar ${INSTALL_DIR}/${APPLICATION}.jar $*
+      -jar ${INSTALL_DIR}/${APPLICATION}.jar "$@"
     exit_code=$?
 
     if [ $exit_code -eq $APPLICATION_RESTART ]; then
