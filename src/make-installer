@@ -133,7 +133,7 @@ chmod 755 ${WORKINGDIR}/bin/${APPLICATION}
 chmod 755 ${WORKINGDIR}/bin/uninstall.sh
 
 # Optionally throw in an INSTALL.txt with project information if there isn't one already:
-if [ ${PROJECT_URL} != "" -a ! -f ${WORKINGDIR}/INSTALL.txt ]; then
+if [ -n "${PROJECT_URL}" ] && [ ! -f "${WORKINGDIR}/INSTALL.txt" ]; then
   echo "This is the installer tarball for ${APPLICATION}-${VERSION}" > ${WORKINGDIR}/INSTALL.txt
   echo "Project URL: ${PROJECT_URL}" >> ${WORKINGDIR}/INSTALL.txt
   echo "" >> ${WORKINGDIR}/INSTALL.txt

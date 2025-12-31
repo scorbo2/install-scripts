@@ -118,6 +118,8 @@ if [ -d $INSTALL_DIR ]; then
       exit 1
     fi
   fi
+else
+  mkdir -p "$INSTALL_DIR"
 fi
 
 
