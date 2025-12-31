@@ -119,7 +119,7 @@ if [ -d $INSTALL_DIR ]; then
     fi
   fi
 else
-  mkdir -p $INSTALL_DIR
+  mkdir -p "$INSTALL_DIR"
 fi
 
 
