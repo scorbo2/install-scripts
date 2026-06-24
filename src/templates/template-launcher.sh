@@ -17,6 +17,11 @@ EXTENSIONS_DIR="${SETTINGS_DIR}/extensions"
 # if your application has specific requirements:
 JAVA_MEM="JavaMemGoesHere"
 
+# You can optionally provide additional Java arguments
+# to be passed to java on startup:
+# (example: --enable-native-access=ALL-UNNAMED)
+EXTRA_JAVA_ARGS="ExtraJavaArgsGoesHere"
+
 # We need to find the directory where ApplicationGoesHere is installed,
 # and the name of the script that was invoked.
 # Note readlink -f is used to disambiguate things in case we were
@@ -49,7 +54,7 @@ fi
 
 while true; do
     # Invoke ApplicationGoesHere with install dir, settings dir, and extensions dir:
-    $JAVA ${JAVA_MEM} \
+    $JAVA ${JAVA_MEM} ${EXTRA_JAVA_ARGS} \
       -DINSTALL_DIR=${INSTALL_DIR} \
       -DSETTINGS_DIR=${SETTINGS_DIR} \
       -DEXTENSIONS_DIR=${EXTENSIONS_DIR} \
