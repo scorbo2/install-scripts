@@ -43,6 +43,9 @@ OUTPUT_DIR=target
 # Extra memory settings like Xmx and Xms can optionally be specified here:
 JAVAMEM=
 
+# Any extra arguments to be passed to the java command:
+EXTRA_JAVA_ARGS=
+
 # The executable application jar file to be bundled into the tarball:
 JAR="target/myapplication-${VERSION}.jar"
 

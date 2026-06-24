@@ -31,6 +31,8 @@
 #            to use when starting your application.
 #            Example: "-Xms1g -Xmx2g"
 #            An empty string is also fine here.
+#  EXTRA_JAVA_ARGS -> Any extra java arguments you want the launcher
+#                  to pass to java when starting your application.
 #  JAR -> The location of your executable jar.
 #         This path should be relative to the current dir.
 #  TO_COPY -> An optional space-separated list of extra files
@@ -125,9 +127,16 @@ done
 mkdir -p ${WORKINGDIR}/bin
 
 # Generate our launcher script and install/uninstall scripts:
-cat ${TEMPLATE_DIR}/template-install.sh | sed s/ApplicationGoesHere/${APPLICATION}/g | sed s/VersionGoesHere/${VERSION}/g | sed s/CategoryGoesHere/${CATEGORY}/g > ${WORKINGDIR}/install.sh
-cat ${TEMPLATE_DIR}/template-launcher.sh | sed s/ApplicationGoesHere/${APPLICATION}/g | sed s/JavaMemGoesHere/${JAVA_MEM}/g > ${WORKINGDIR}/bin/${APPLICATION}
-cat ${TEMPLATE_DIR}/template-uninstall.sh | sed s/ApplicationGoesHere/${APPLICATION}/g > ${WORKINGDIR}/bin/uninstall.sh
+cat ${TEMPLATE_DIR}/template-install.sh \
+    | sed s#ApplicationGoesHere#${APPLICATION}#g \
+    | sed s#VersionGoesHere#${VERSION}#g \
+    | sed s#CategoryGoesHere#${CATEGORY}#g > ${WORKINGDIR}/install.sh
+cat ${TEMPLATE_DIR}/template-launcher.sh \
+    | sed s#ApplicationGoesHere#${APPLICATION}#g \
+    | sed s#JavaMemGoesHere#${JAVA_MEM}#g \
+    | sed s#ExtraJavaArgsGoesHere#${EXTRA_JAVA_ARGS}#g > ${WORKINGDIR}/bin/${APPLICATION}
+cat ${TEMPLATE_DIR}/template-uninstall.sh \
+    | sed s#ApplicationGoesHere#${APPLICATION}#g > ${WORKINGDIR}/bin/uninstall.sh
 chmod 755 ${WORKINGDIR}/install.sh
 chmod 755 ${WORKINGDIR}/bin/${APPLICATION}
 chmod 755 ${WORKINGDIR}/bin/uninstall.sh
