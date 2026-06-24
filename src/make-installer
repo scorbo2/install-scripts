@@ -27,7 +27,7 @@
 #  VERSION -> The major.minor version of your app.
 #            By convention we don't use major.minor.patch here.
 #  PROJECT_URL -> an optional URL for your project home.
-#  JAVAMEM -> Any extra java memory options you want the launcher
+#  JAVA_MEM -> Any extra java memory options you want the launcher
 #            to use when starting your application.
 #            Example: "-Xms1g -Xmx2g"
 #            An empty string is also fine here.
@@ -126,17 +126,24 @@ for file in ${TO_COPY} ; do
 done
 mkdir -p ${WORKINGDIR}/bin
 
+# Make our variables safe for sed:
+APPLICATION_ESCAPED=$(printf '%s\n' "${APPLICATION}" | sed 's/[&/\\#]/\\&/g')
+VERSION_ESCAPED=$(printf '%s\n' "${VERSION}" | sed 's/[&/\\#]/\\&/g')
+CATEGORY_ESCAPED=$(printf '%s\n' "${CATEGORY}" | sed 's/[&/\\#]/\\&/g')
+JAVA_MEM_ESCAPED=$(printf '%s\n' "${JAVA_MEM}" | sed 's/[&/\\#]/\\&/g')
+EXTRA_JAVA_ARGS_ESCAPED=$(printf '%s\n' "${EXTRA_JAVA_ARGS}" | sed 's/[&/\\#]/\\&/g')
+
 # Generate our launcher script and install/uninstall scripts:
 cat ${TEMPLATE_DIR}/template-install.sh \
-    | sed s#ApplicationGoesHere#${APPLICATION}#g \
-    | sed s#VersionGoesHere#${VERSION}#g \
-    | sed s#CategoryGoesHere#${CATEGORY}#g > ${WORKINGDIR}/install.sh
+    | sed s/ApplicationGoesHere/${APPLICATION_ESCAPED}/g \
+    | sed s/VersionGoesHere/${VERSION_ESCAPED}/g \
+    | sed s/CategoryGoesHere/${CATEGORY_ESCAPED}/g > ${WORKINGDIR}/install.sh
 cat ${TEMPLATE_DIR}/template-launcher.sh \
-    | sed s#ApplicationGoesHere#${APPLICATION}#g \
-    | sed s#JavaMemGoesHere#${JAVA_MEM}#g \
-    | sed s#ExtraJavaArgsGoesHere#${EXTRA_JAVA_ARGS}#g > ${WORKINGDIR}/bin/${APPLICATION}
+    | sed s/ApplicationGoesHere/${APPLICATION_ESCAPED}/g \
+    | sed s/JavaMemGoesHere/${JAVA_MEM_ESCAPED}/g \
+    | sed s/ExtraJavaArgsGoesHere/${EXTRA_JAVA_ARGS_ESCAPED}/g > ${WORKINGDIR}/bin/${APPLICATION}
 cat ${TEMPLATE_DIR}/template-uninstall.sh \
-    | sed s#ApplicationGoesHere#${APPLICATION}#g > ${WORKINGDIR}/bin/uninstall.sh
+    | sed s/ApplicationGoesHere/${APPLICATION_ESCAPED}/g > ${WORKINGDIR}/bin/uninstall.sh
 chmod 755 ${WORKINGDIR}/install.sh
 chmod 755 ${WORKINGDIR}/bin/${APPLICATION}
 chmod 755 ${WORKINGDIR}/bin/uninstall.sh
