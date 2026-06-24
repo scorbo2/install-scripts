@@ -50,6 +50,7 @@ fi
 while true; do
     # Invoke ApplicationGoesHere with install dir, settings dir, and extensions dir:
     $JAVA ${JAVA_MEM} \
+      --enable-native-access=ALL-UNNAMED \
       -DINSTALL_DIR=${INSTALL_DIR} \
       -DSETTINGS_DIR=${SETTINGS_DIR} \
       -DEXTENSIONS_DIR=${EXTENSIONS_DIR} \
