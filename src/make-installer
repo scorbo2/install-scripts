@@ -135,18 +135,18 @@ EXTRA_JAVA_ARGS_ESCAPED=$(printf '%s\n' "${EXTRA_JAVA_ARGS}" | sed 's/[&/\\#]/\\
 
 # Generate our launcher script and install/uninstall scripts:
 cat ${TEMPLATE_DIR}/template-install.sh \
-    | sed s/ApplicationGoesHere/${APPLICATION_ESCAPED}/g \
-    | sed s/VersionGoesHere/${VERSION_ESCAPED}/g \
-    | sed s/CategoryGoesHere/${CATEGORY_ESCAPED}/g > ${WORKINGDIR}/install.sh
+    | sed "s/ApplicationGoesHere/${APPLICATION_ESCAPED}/g" \
+    | sed "s/VersionGoesHere/${VERSION_ESCAPED}/g" \
+    | sed "s/CategoryGoesHere/${CATEGORY_ESCAPED}/g" > ${WORKINGDIR}/install.sh
 cat ${TEMPLATE_DIR}/template-launcher.sh \
-    | sed s/ApplicationGoesHere/${APPLICATION_ESCAPED}/g \
-    | sed s/JavaMemGoesHere/${JAVA_MEM_ESCAPED}/g \
-    | sed s/ExtraJavaArgsGoesHere/${EXTRA_JAVA_ARGS_ESCAPED}/g > ${WORKINGDIR}/bin/${APPLICATION}
+    | sed "s/ApplicationGoesHere/${APPLICATION_ESCAPED}/g" \
+    | sed "s/JavaMemGoesHere/${JAVA_MEM_ESCAPED}/g" \
+    | sed "s/ExtraJavaArgsGoesHere/${EXTRA_JAVA_ARGS_ESCAPED}/g" > ${WORKINGDIR}/bin/${APPLICATION}
 cat ${TEMPLATE_DIR}/template-uninstall.sh \
-    | sed s/ApplicationGoesHere/${APPLICATION_ESCAPED}/g > ${WORKINGDIR}/bin/uninstall.sh
-chmod 755 ${WORKINGDIR}/install.sh
-chmod 755 ${WORKINGDIR}/bin/${APPLICATION}
-chmod 755 ${WORKINGDIR}/bin/uninstall.sh
+    | sed "s/ApplicationGoesHere/${APPLICATION_ESCAPED}/g" > ${WORKINGDIR}/bin/uninstall.sh
+chmod 755 "${WORKINGDIR}/install.sh"
+chmod 755 "${WORKINGDIR}/bin/${APPLICATION}"
+chmod 755 "${WORKINGDIR}/bin/uninstall.sh"
 
 # Optionally throw in an INSTALL.txt with project information if there isn't one already:
 if [ -n "${PROJECT_URL}" ] && [ ! -f "${WORKINGDIR}/INSTALL.txt" ]; then
