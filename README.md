@@ -44,6 +44,8 @@ OUTPUT_DIR=target
 JAVA_MEM=
 
 # Any extra arguments to be passed to the java command:
+# For example, in Java 24+, to suppress unnamed-module warnings on startup: 
+# EXTRA_JAVA_ARGS="--enable-native-access=ALL-UNNAMED"
 EXTRA_JAVA_ARGS=
 
 # The executable application jar file to be bundled into the tarball:
